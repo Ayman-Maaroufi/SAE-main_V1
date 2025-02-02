@@ -1,0 +1,119 @@
+{% extends "admin/layout_admin.html" %}
+{% block body %}
+    <div class="container-fluid">
+        {% if articles_commande %}
+            <h3>Recapitulatifs de la commande selectionnée</h3>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr><th>Nom</th><th>Quantite</th><th>Prix</th><th>Prix total</th></tr>
+                </thead>
+                <tbody>
+                        {% for ligne in articles_commande %}
+                             <tr>
+                                <td>{{ ligne.nom }}
+                                {% if ligne.nb_declinaisons is defined and ligne.nb_declinaisons > 1 %}
+                                    <span style="color:rgba(255,197,197,0.6);"> ( {{ ligne.nb_declinaisons }} declinaisons )</span>
+                                    <span style="color:#6dcea2">
+                                    {% if ligne.couleur_id != 1 %}
+                                        {{ ligne.libelle_couleur }}
+                                    {% endif %}
+                                    </span>
+                                    <span  style="color:#d941c2">
+                                    {% if ligne.taille_id != 1 %}
+                                        {{ ligne.libelle_taille }}
+                                    {% endif %}
+                                    </span>
+                                {% endif %}
+                                </td>
+                                <td>{{ ligne.quantite }}</td>
+                                <td>{{ ligne.prix }} €</td>
+                                <td>{{ ligne.prix_ligne }} €  </td>
+                            </tr>
+                        {% endfor %}
+
+                </tbody>
+            </table>
+               <br>
+                <div style="color: brown">
+                <strong>adresse livraison : </strong>{{ commande_adresses.nom_livraison }} {{ commande_adresses.rue_livraison }} {{ commande_adresses.code_postal_livraison }} {{ commande_adresses.ville_livraison }}
+                <br>
+                <strong>adresse facturation : </strong>
+                {% if commande_adresses.adresse_identique == 'adresse_identique' %}
+                    adresse identique
+                {% else %}
+                    {{ commande_adresses.nom_facturation }} {{ commande_adresses.rue_facturation }} {{ commande_adresses.code_postal_facturation }} {{ commande_adresses.ville_facturation }}
+                {% endif %}
+                </div>
+
+            {% if articles_commande[0].etat_id == 1 %}
+            <form action="/admin/commande/valider"  style="display: inline-block;"  method="post">
+                  <input type="hidden" name="idCommande" value="{{ articles_commande[0].id }}">
+                  <button class="btn btn-primary" > Valider (Expédier) </button>
+            </form>
+            {% endif %}
+            <hr>
+        {% endif %}
+
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 font-weight-bold">Toutes les commandes</p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                    <table class="table my-0" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th>login client</th>
+                            <th>Date de commande</th>
+                            <th>Nombre d'articles</th>
+                            <th>Coût total</th>
+                            <th>Etat de la commande</th>
+                            <th style="text-align: center;">Options</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% set commandes = [
+                            {"login": "jean.dupont", "date_achat": "2023-05-15", "nbr_articles": 3, "prix_total": 89.97, "libelle": "En cours", "id_commande": 1001, "etat_id": 1},
+                            {"login": "marie.martin", "date_achat": "2023-05-14", "nbr_articles": 1, "prix_total": 29.99, "libelle": "Expédiée", "id_commande": 1002, "etat_id": 2},
+                            {"login": "pierre.durand", "date_achat": "2023-05-13", "nbr_articles": 2, "prix_total": 59.98, "libelle": "Livrée", "id_commande": 1003, "etat_id": 3},
+                            {"login": "sophie.lefebvre", "date_achat": "2023-05-12", "nbr_articles": 5, "prix_total": 149.95, "libelle": "En cours", "id_commande": 1004, "etat_id": 1},
+                            {"login": "thomas.moreau", "date_achat": "2023-05-11", "nbr_articles": 1, "prix_total": 19.99, "libelle": "Expédiée", "id_commande": 1005, "etat_id": 2},
+                            {"login": "chloe.petit", "date_achat": "2023-05-10", "nbr_articles": 4, "prix_total": 119.96, "libelle": "En cours", "id_commande": 1006, "etat_id": 1},
+                            {"login": "lucas.roux", "date_achat": "2023-05-09", "nbr_articles": 2, "prix_total": 79.98, "libelle": "Livrée", "id_commande": 1007, "etat_id": 3},
+                            {"login": "emma.girard", "date_achat": "2023-05-08", "nbr_articles": 3, "prix_total": 89.97, "libelle": "Expédiée", "id_commande": 1008, "etat_id": 2},
+                            {"login": "louis.bernard", "date_achat": "2023-05-07", "nbr_articles": 1, "prix_total": 39.99, "libelle": "En cours", "id_commande": 1009, "etat_id": 1},
+                            {"login": "camille.dubois", "date_achat": "2023-05-06", "nbr_articles": 6, "prix_total": 199.94, "libelle": "Livrée", "id_commande": 1010, "etat_id": 3},
+                            {"login": "antoine.lambert", "date_achat": "2023-05-05", "nbr_articles": 2, "prix_total": 69.98, "libelle": "Expédiée", "id_commande": 1011, "etat_id": 2},
+                            {"login": "julie.rousseau", "date_achat": "2023-05-04", "nbr_articles": 4, "prix_total": 129.96, "libelle": "En cours", "id_commande": 1012, "etat_id": 1}
+                        ] %}
+                        {% for commande in commandes %}
+                            <tr id="" {% if commande.etat_id == 1 %} class="table-warning" style="font-weight: bold;"{% endif %}>
+                                <td>{{ commande.login }}</td>
+                                <td>{{ commande.date_achat }}</td>
+                                <td> {{ commande.nbr_articles }} </td>
+                                <td>
+                                    {{ commande.prix_total }}
+                                </td>
+                                <td> {{ commande.libelle }}</td>
+                                <td style="text-align: center;">
+                                    <form action="/admin/commande/valider" style="display: inline-block;"  method="post">
+                                        <input type="hidden" name="id_commande" value="{{ commande.id_commande }}">
+                                        <button class="btn btn-primary" > Valider (Expédier) </button>
+                                    </form>
+                                    <a href="/admin/commande/show?id_commande={{ commande.id_commande }}">
+                                        <button class="btn btn-primary" > Details </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+        </div>
+    </div>
+{% endblock %}
+

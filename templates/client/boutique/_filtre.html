@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtres Clés USB</title>
+    <link rel="stylesheet" href="/static/mes_styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Filtres Clés USB</h1>
+
+        <div class="filter-container">
+            <form class="filter-form" method="post" action="/client/panier/filtre">
+                <div class="form-group">
+                    <label for="filter_word">Recherche :</label>
+                    <input id="filter_word" name="filter_word" type="text" placeholder="Recherche" value="{{ session['filter_word'] if session['filter_word'] else '' }}">
+                </div>
+
+                {% if items_filtre is defined %}
+                <div class="form-group">
+                    <h4>Types d'articles</h4>
+                    {% for item_filtre in items_filtre %}
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="filter_types" value="{{ item_filtre.id_type_article }}"
+                               {{ 'checked' if session['filter_types'] and (item_filtre.id_type_article|string in session['filter_types']) else '' }}>
+                        {{ item_filtre.libelle }}
+                    </label>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <h4>Prix :</h4>
+                    <input name="filter_prix_min" type="number" placeholder="min" value="{{ session['filter_prix_min'] if session['filter_prix_min'] else '' }}">
+                    <input name="filter_prix_max" type="number" placeholder="max" value="{{ session['filter_prix_max'] if session['filter_prix_max'] else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="filter_capacity">Capacité :</label>
+                    <select id="filter_capacity" name="filter_capacity">
+                        <option value="">Toutes les capacités</option>
+                        <option value="8" {{ 'selected' if session['filter_capacity'] == '8' else '' }}>8 Go</option>
+                        <option value="16" {{ 'selected' if session['filter_capacity'] == '16' else '' }}>16 Go</option>
+                        <option value="32" {{ 'selected' if session['filter_capacity'] == '32' else '' }}>32 Go</option>
+                        <option value="64" {{ 'selected' if session['filter_capacity'] == '64' else '' }}>64 Go</option>
+                        <option value="128" {{ 'selected' if session['filter_capacity'] == '128' else '' }}>128 Go</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="filter_speed">Vitesse de transfert :</label>
+                    <select id="filter_speed" name="filter_speed">
+                        <option value="">Toutes les vitesses</option>
+                        <option value="2.0" {{ 'selected' if session['filter_speed'] == '2.0' else '' }}>USB 2.0</option>
+                        <option value="3.0" {{ 'selected' if session['filter_speed'] == '3.0' else '' }}>USB 3.0</option>
+                        <option value="3.1" {{ 'selected' if session['filter_speed'] == '3.1' else '' }}>USB 3.1</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="filter_brand">Marque :</label>
+                    <select id="filter_brand" name="filter_brand">
+                        <option value="">Toutes les marques</option>
+                        <option value="sandisk" {{ 'selected' if session['filter_brand'] == 'sandisk' else '' }}>SanDisk</option>
+                        <option value="kingston" {{ 'selected' if session['filter_brand'] == 'kingston' else '' }}>Kingston</option>
+                        <option value="samsung" {{ 'selected' if session['filter_brand'] == 'samsung' else '' }}>Samsung</option>
+                        <option value="lexar" {{ 'selected' if session['filter_brand'] == 'lexar' else '' }}>Lexar</option>
+
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Filtrer</button>
+            </form>
+
+            {% if session['filter_word'] or session['filter_prix_max'] or session['filter_prix_min'] or session['filter_types'] or session['filter_capacity'] or session['filter_speed'] or session['filter_brand'] %}
+            <form action="/client/panier/filtre/suppr" method="post">
+                <button type="submit" class="btn btn-secondary">Supprimer filtre</button>
+            </form>
+            {% endif %}
+        </div>
+
+        <div class="products">
+            <div class="product">
+                <img src="/static/images/cle-usb-1.jpg" alt="Clé USB SanDisk 32Go">
+                <h3>Clé USB SanDisk 32Go</h3>
+                <p>Prix: 19.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-2.jpg" alt="Clé USB Kingston 64Go">
+                <h3>Clé USB Kingston 64Go</h3>
+                <p>Prix: 29.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-3.jpg" alt="Clé USB Samsung 128Go">
+                <h3>Clé USB Samsung 128Go</h3>
+                <p>Prix: 39.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-4.jpg" alt="Clé USB Lexar 16Go">
+                <h3>Clé USB Lexar 16Go</h3>
+                <p>Prix: 14.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-5.jpg" alt="Clé USB SanDisk 64Go">
+                <h3>Clé USB SanDisk 64Go</h3>
+                <p>Prix: 24.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-6.jpg" alt="Clé USB Kingston 32Go">
+                <h3>Clé USB Kingston 32Go</h3>
+                <p>Prix: 18.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-7.jpg" alt="Clé USB Integral 24Go">
+                <h3>Clé USB Integral 24Go</h3>
+                <p>Prix: 14.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-8.jpg" alt="Clé USB FineWish 128Go">
+                <h3>Clé USB FineWish 128Go</h3>
+                <p>Prix: 24.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-9.jpg" alt="Clé USB Hama 64Go">
+                <h3>Clé USB Hama 64Go</h3>
+                <p>Prix: 34.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-10.jpg" alt="Clé USB SanDisk 64Go">
+                <h3>Clé USB SanDisk 64Go</h3>
+                <p>Prix: 44.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+                <div class="product">
+                <img src="/static/images/cle-usb-11.jpg" alt="Clé USB iDiskk 64Go">
+                <h3>Clé USB iDiskk 64Go</h3>
+                <p>Prix: 24.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-12.jpg" alt="Clé USB Intenso 32Go">
+                <h3>Clé USB Intenso 32Go</h3>
+                <p>Prix: 24.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-13.jpg" alt="Clé USB Integral 16Go">
+                <h3>Clé USB Integral 16Go</h3>
+                <p>Prix: 22.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-14.jpg" alt="Clé USB SanDisk 64Go">
+                <h3>Clé USB SanDisk 64Go</h3>
+                <p>Prix: 27.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-15.jpg" alt="Clé USB KingSton 128Go">
+                <h3>Clé USB KingSton 128Go</h3>
+                <p>Prix: 114.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-16.jpg" alt="Clé USB Intgral 16Go">
+                <h3>Clé USB Intgral 16Go</h3>
+                <p>Prix: 25.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-17.jpg" alt="Clé USB Leica 8Go">
+                <h3>Clé USB Leica 8Go</h3>
+                <p>Prix: 14.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-18.jpg" alt="Clé USB SanDisk 64Go">
+                <h3>Clé USB SanDisk 64Go</h3>
+                <p>Prix: 44.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+            <div class="product">
+                <img src="/static/images/cle-usb-19.jpg" alt="Clé USB SanDisk 64Go">
+                <h3>Clé USB SanDisk 64Go</h3>
+                <p>Prix: 34.99€</p>
+                <button class="btn btn-add-to-cart">Ajouter au panier</button>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+
